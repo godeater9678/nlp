@@ -1,0 +1,5 @@
+setuptools~=74.1.2
+numpy~=2.0.2
+sentencepiece~=0.2.0
+konlpy~=0.5.2
+transformers~=4.46.3
