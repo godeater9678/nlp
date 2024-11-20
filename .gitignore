@@ -2,3 +2,4 @@
 **/models/**
 /transformer/gpt-2/models/gpt2/
 /vcpkg/
+/Mecab-ko-for-Google-Colab/
