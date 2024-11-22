@@ -18,7 +18,7 @@ def load_dataset(file_path, tokenizer, block_size=128):
     return dataset
 
 # 데이터 로드
-train_file = "./custom_data.txt"  # 학습 데이터 경로
+train_file = "./data/custom_data.txt"  # 학습 데이터 경로
 train_dataset = load_dataset(train_file, tokenizer)
 
 # 데이터 처리기
@@ -29,7 +29,7 @@ data_collator = DataCollatorForLanguageModeling(
 
 # 학습 설정
 training_args = TrainingArguments(
-    output_dir="./gpt2-finetuned",  # 출력 디렉토리
+    output_dir="./models/gpt2-finetuned",  # 출력 디렉토리
     overwrite_output_dir=True,
     num_train_epochs=3,  # 학습 에포크 수
     per_device_train_batch_size=4,  # 배치 크기
@@ -52,5 +52,5 @@ trainer = Trainer(
 trainer.train()
 
 # Fine-Tuned 모델 저장
-trainer.save_model("./gpt2-finetuned")
-tokenizer.save_pretrained("./gpt2-finetuned")
+trainer.save_model("./models/gpt2-finetuned")
+tokenizer.save_pretrained("./models/gpt2-finetuned")

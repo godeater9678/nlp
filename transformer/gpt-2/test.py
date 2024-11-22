@@ -6,13 +6,17 @@ from deep_translator import GoogleTranslator
 nltk.download('punkt')
 nltk.download('punkt_tab')
 
-tokenizer = GPT2Tokenizer.from_pretrained("gpt2", cache_dir="./models/gpt2")
-model = GPT2LMHeadModel.from_pretrained("gpt2", cache_dir="./models/gpt2")
+#tokenizer = GPT2Tokenizer.from_pretrained("gpt2", cache_dir="./models/gpt2")
+#model = GPT2LMHeadModel.from_pretrained("gpt2", cache_dir="./models/gpt2")
+# Fine-Tuned 모델과 토크나이저 로드
+model_path = "./models/gpt2-finetuned"  # Fine-Tuned 모델 경로
+tokenizer = GPT2Tokenizer.from_pretrained(model_path)
+model = GPT2LMHeadModel.from_pretrained(model_path)
 
 # `pad_token_id`를 `eos_token_id`로 설정
 tokenizer.pad_token = tokenizer.eos_token
 
-ask = "아침 다음은?"
+ask = "what is PYUN"
 input_text = GoogleTranslator(source='ko', target='en').translate(
     ask
 )
@@ -20,16 +24,7 @@ inputs = tokenizer(input_text, return_tensors="pt", padding=True, truncation=Tru
 
 # 텍스트 생성
 outputs = model.generate(
-    input_ids=inputs["input_ids"],
-    attention_mask=inputs["attention_mask"],  # attention_mask 추가
-    max_length=50,
-    num_return_sequences=10,
-    do_sample=True,
-    temperature=0.8,
-    top_k=50,
-    top_p=0.9,
-    repetition_penalty=1.2,
-    pad_token_id=tokenizer.pad_token_id  # pad_token_id 설정
+    input_ids=inputs["input_ids"]
 )
 
 print("질문: ", ask)
