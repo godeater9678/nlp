@@ -12,7 +12,7 @@ model = GPT2LMHeadModel.from_pretrained("gpt2", cache_dir="./models/gpt2")
 # `pad_token_id`를 `eos_token_id`로 설정
 tokenizer.pad_token = tokenizer.eos_token
 
-ask = "아침 다음은?"
+ask = "현범이는 배가 아파요. 어떻게 해야해요?"
 input_text = GoogleTranslator(source='ko', target='en').translate(
     ask
 )
