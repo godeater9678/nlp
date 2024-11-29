@@ -1,18 +1,25 @@
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, Trainer, TrainingArguments
 from datasets import Dataset
-from util.transrator import korean_to_english, english_to_korean
+from util.translator import korean_to_english, english_to_korean
+from preprocess.preprocessor import read_from_txt_korean, read_from_txt_file, split_questions_and_answers
+from preprocess.preprocessorFacade import preprocessorForDocumentText
+
 
 # 데이터 준비
-data = [
-    {"text": "질문: 현범이는 누구야? 답변: 네, 그 사람은 개발자에요."},
-    {"text": "질문: 현범이는 무엇을 좋아하나요? 답변: 그는 코딩과 새로운 기술을 배우는 것을 좋아해요."},
-]
-
-for item in data:
-    item["text"] = korean_to_english(item["text"].strip())
-
+# data = [
+#     {"text": "현범은 누구인가요? 네, 그 사람은 개발자에요."},
+#     {"text": "현범은 무엇을 좋아하나요? 그는 코딩과 새로운 기술을 배우는 것을 좋아해요."},
+#     {"text": "현범은 키가 몇이죠? 180cm 입니다."},
+#     {"text": "현범의 몸무게는요? 75kg 입니다."},
+# ]
+#
+# for item in data:
+#     item["text"] = korean_to_english(item["text"].strip())
 # 데이터셋 생성
-dataset = Dataset.from_list(data)
+#dataset = Dataset.from_list(data)
+
+sentences = preprocessorForDocumentText(read_from_txt_korean('./contents.txt'))
+dataset = Dataset.from_list(sentences)
 
 # 토크나이저 및 모델 로드
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2", cache_dir="./models/gpt2")
@@ -20,11 +27,13 @@ tokenizer.pad_token = tokenizer.eos_token  # 패딩 토큰 설정
 model = GPT2LMHeadModel.from_pretrained("gpt2", cache_dir="./models/gpt2")
 model.config.pad_token_id = tokenizer.pad_token_id
 
+
 # 토큰화 함수
 def tokenize(batch):
     encoding = tokenizer(batch["text"], padding=True, truncation=True, return_tensors="pt")
     encoding["labels"] = encoding["input_ids"].clone()  # labels 추가
     return encoding
+
 
 # 데이터셋 토큰화
 tokenized_dataset = dataset.map(tokenize, batched=True)

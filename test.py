@@ -1,29 +1,31 @@
-from xrpl.clients import JsonRpcClient
-from xrpl.models.requests import AccountTx
+from preprocess.preprocessor import (
+    split_by_sentence,
+    read_from_txt_korean,
+    is_incomplete_or_introductory,
+    split_questions_and_answers,
+    is_question,
+    is_topic_sentence,
+    semantic_similarity
+)
+from preprocess.preprocessorFacade import preprocessorForDocumentText
 
-# XRP Ledger RPC 서버 설정
-client = JsonRpcClient("https://s1.ripple.com:51234/")
+sentences = preprocessorForDocumentText(read_from_txt_korean('./transformer/chatBot/contents.txt'))
 
-# XRP 지갑 주소
-xrp_address = "rGN9R3ToTpZ8BuJCALLrhjRMjKUDxppmB1"
 
-# 거래 내역 요청
-request = AccountTx(account=xrp_address, ledger_index_min=-1, ledger_index_max=-1)
-response = client.request(request)
+print(sentences)
 
-# 거래 내역 출력
-transactions = response.result["transactions"]
-for tx in transactions:
-    tx_data = tx['tx_json']
-    memos = tx_data.get('Memos', [])
-    if memos:
-        for memo in memos:
-            memo_data = memo.get('Memo', {})
-            memo_text = memo_data.get('MemoData', '')
-            print(f"Transaction Hash: {tx_data['hash']}")
-            print(f"Memo: {memo_text}")
-            print("-" * 40)
-    else:
-        print(f"Transaction Hash: {tx['hash']}")
-        print("No Memo")
-        print("-" * 40)
+#
+# # 예제 문장
+# sentences = [
+#     "3. Initial Content Seeding Strategy.",
+#     "This is the final conclusion.",
+#     "The key benefits include:",
+#     "Benefits -",
+#     "An overview of the process...",
+#     "Hyunbeom is learning Python."
+# ]
+#
+# # 판단
+# for sentence in sentences:
+#     result = is_incomplete_or_introductory(sentence)
+#     print(f"'{sentence}' -> {'Introductory or incomplete' if result else 'Complete'}")
