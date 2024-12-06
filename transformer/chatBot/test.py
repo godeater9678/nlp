@@ -38,7 +38,7 @@ def generate_with_uncertainty(model, tokenizer, input_text, confidence_threshold
         return tokenizer.decode(generated_ids, skip_special_tokens=True)
 
 
-input_text = korean_to_english("기관에 신뢰받는 방법")
+input_text = korean_to_english("현범이는 누구에요?")
 spl = split_questions_no_punctuation(input_text) #문장 나누기
 spc = extract_proper_nouns(input_text)[0] if len(spl) > 0 else '' #명사 가져오기
 for question in spl:
